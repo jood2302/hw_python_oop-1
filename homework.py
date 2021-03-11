@@ -29,11 +29,13 @@ from typing import List
 LOCAL_DATE_FORMAT: str = '%d.%m.%Y'
 
 
-def time_to_date(dt_time: dt.datetime) -> dt.date:
-    """ convert datetime in date only
+def time_to_date(date: str) -> dt.date:
+    """ Get string of date in format "dd.dd.yyyy" and
+        return dt.date obj with this
 
     """
-    return dt.date(dt_time.year, dt_time.month, dt_time.day)
+    tmp_date: List[str] = date.split('.')
+    return dt.date(tmp_date[0], tmp_date[1], tmp_date[2])
 
 
 class Record:
@@ -54,8 +56,8 @@ class Record:
         if date is None:
             self.date: dt.date = dt.date.today()
         else:
-            self.date: dt.date = \
-                time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
+            self.date: dt.date = time_to_date(date)
+            # dt.datetime.strptime(date, LOCAL_DATE_FORMAT)
 
 
 class Calculator:
@@ -108,8 +110,8 @@ class CaloriesCalculator(Calculator):
         """
         is_over: float = self.limit - self.get_today_stats()
         if is_over > 0:
-            return "Сегодня можно съесть что-нибудь ещё, "
-            f" но с общей калорийностью не более {is_over} кКал"
+            return (f'Сегодня можно съесть что-нибудь ещё, '
+                    f' но с общей калорийностью не более {is_over} кКал')
         else:
             return 'Хватит есть!'
 
@@ -151,8 +153,8 @@ class CashCalculator(Calculator):
 
         elif now_cash < 0:
             now_cash *= -1
-            return "Денег нет, держись: твой долг - "
-            f"{round(now_cash *  multiplier, 2)} {currency_name}"
+            return (f"Денег нет, держись: твой долг - "
+                    f"{round(now_cash *  multiplier, 2)} {currency_name}")
         else:
-            return "На сегодня осталось "
-            f"{round(now_cash *  multiplier, 2)} {currency_name}"
+            return (f"На сегодня осталось "
+                    f"{round(now_cash *  multiplier, 2)} {currency_name}")
