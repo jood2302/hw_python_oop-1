@@ -54,8 +54,8 @@ class Record:
         if date is None:
             self.date: dt.date = dt.date.today()
         else:
-            (self.date: dt.date = 
-                time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT)))
+            self.date: dt.date = \
+                time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
 
 
 class Calculator:
