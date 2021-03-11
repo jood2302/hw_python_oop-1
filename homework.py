@@ -1,26 +1,26 @@
-# Project: Sprint 2. Calculator calories/money (four classes). Yandex.Praktikum.Python developer.
+# Project: Sprint 2. Calculator calories/money (four classes). 
+# Yandex.Praktikum.Python developer.
 # Author: Vasiliy Kovylin. Backend, Cohort 16, Student.
-#
+
 # Description:
 # Need make four classes for two calculators: 
 # Class Record
 # Class Calculator
 # Class CaloriesCalculator
 # Class CashCalculator
-#
-# Methods for Record:                 # first brick in the wall...
+
+# Methods for Record:                 
 # no methods, only data
 
-#
-# Methods for Calculator:             # Parent for CaloriesCalculator and CashCalculator, or for another simplest calculators
+# Methods for Calculator:             
 # add_record()
 # get_today_stats()
 # get_week_stats()
 #
-# Methods for CaloriesCalculator:     # Child of Calculator wiht own new method get_calories_remained()
+# Methods for CaloriesCalculator:     
 # get_calories_remained()
 #
-# Methods for CashCalculator:         # Child of Calculator wiht own new method get_today_cash_remained(currency)
+# Methods for CashCalculator:         
 # get_today_cash_remained(currency)    
 
 
@@ -46,16 +46,18 @@ class Record:
     def __init__ (self, amount: float, comment: str, date: str = None) -> None: 
         """ Needs 3 named values: 'amount', 'comment' and 'date'
             In call of this, value 'date' may be skipped
-            In this case, in the value 'date' should be written the value of current day.
+            In this case, in the value 'date' should be 
+            written the value of current day.
 
         """
         self.amount: float = amount
         self.comment: str = comment
-        
+
         if date is None:
             self.date: dt.date = dt.date.today()
         else:
-            self.date: dt.date = time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
+            self.date: dt.date = 
+            time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
 
 
 class Calculator:
@@ -67,10 +69,10 @@ class Calculator:
 
         """
         self.limit: int = limit
-        self.records: List[Record] = [] 
+        self.records: List[Record] = []
 
     def add_record(self, record: Record) -> None:
-        """  Adds record to self list of records. Incoming - obj of class Record 
+        """  Adds record to self list of records. Incoming - obj of class Record
 
         """
         self.records.append(record)
@@ -109,7 +111,8 @@ class CaloriesCalculator(Calculator):
         """
         is_over: float = self.limit - self.get_today_stats()
         if is_over > 0:
-            return f'Сегодня можно съесть что-нибудь ещё, но с общей калорийностью не более {is_over} кКал'
+            return f'Сегодня можно съесть что-нибудь ещё, '
+                   f' но с общей калорийностью не более {is_over} кКал'
         else:
             return f'Хватит есть!'
 
@@ -127,15 +130,12 @@ class CashCalculator(Calculator):
         """
         super().__init__(limit)
 
-        #self.EURO_RATE: float = 87.94
-        #self.USD_RATE: float = 73.91
-
     def get_today_cash_remained(self, currency: str) -> str :  # принимает три значения "rub", "usd" или "eur"
-        """ From call wait 1 of 3 currency name, calculates balance and 
-            return message with the value in the recalculated form.        
+        """ From call wait 1 of 3 currency name, calculates balance and
+            return message with the value in the recalculated form.    
 
         """
-        
+
         now_cash: float = self.limit - self.get_today_stats()
 
         if currency == 'usd':
@@ -153,9 +153,8 @@ class CashCalculator(Calculator):
 
         elif now_cash < 0:
             now_cash *= -1
-            return f'Денег нет, держись: твой долг - {round(now_cash *  multiplier, 2)} {currency_name}'
+            return f'Денег нет, держись: твой долг - '
+                   f' {round(now_cash *  multiplier, 2)} {currency_name}'
         else:
-            return f'На сегодня осталось {round(now_cash *  multiplier, 2)} {currency_name}'
-        
-        
-        
+            return f'На сегодня осталось '
+                   f'{round(now_cash *  multiplier, 2)} {currency_name}'
