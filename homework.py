@@ -28,6 +28,7 @@ from typing import List
 
 LOCAL_DATE_FORMAT: str = '%d.%m.%Y'
 
+    
 def time_to_date(dt_time: dt.datetime) -> dt.date:
     """ convert datetime in date only
 
@@ -53,7 +54,8 @@ class Record:
         if date is None:
             self.date: dt.date = dt.date.today()
         else:
-            self.date: dt.date = time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
+            self.date: dt.date = 
+                time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
 
 class Calculator:
     """ Parent class. Contains basic functionality, including list or records.
@@ -82,11 +84,11 @@ class Calculator:
             if rec.date == today:
                 today_sum += rec.amount
         return today_sum
-        
+
     def get_week_stats(self) -> float:
         """ calculates sum of field 'amount' in self list 'records' for current date
             and six days ago
-        """        
+        """
         today: dt.date = dt.date.today()
         week_sum: float = 0
         for rec in self.records:
@@ -105,10 +107,11 @@ class CaloriesCalculator(Calculator):
         is_over: float = self.limit - self.get_today_stats()
         if is_over > 0:
             return f'Сегодня можно съесть что-нибудь ещё, '
-                   f' но с общей калорийностью не более {is_over} кКал'
+                    f' но с общей калорийностью не более {is_over} кКал'
         else:
             return f'Хватит есть!'
 
+        
 class CashCalculator(Calculator):
     """ Child class of 'Calculator'. All of this included.
         Added new own method
@@ -123,9 +126,9 @@ class CashCalculator(Calculator):
         """
         super().__init__(limit)
 
-    def get_today_cash_remained(self, currency: str) -> str :  # принимает три значения "rub", "usd" или "eur"
+    def get_today_cash_remained(self, currency: str) -> str:
         """ From call wait 1 of 3 currency name, calculates balance and
-            return message with the value in the recalculated form.    
+            return message with the value in the recalculated form.
 
         """
 
@@ -147,7 +150,7 @@ class CashCalculator(Calculator):
         elif now_cash < 0:
             now_cash *= -1
             return f'Денег нет, держись: твой долг - '
-                   f' {round(now_cash *  multiplier, 2)} {currency_name}'
+                    f' {round(now_cash *  multiplier, 2)} {currency_name}'
         else:
             return f'На сегодня осталось '
-                   f'{round(now_cash *  multiplier, 2)} {currency_name}'
+                    f'{round(now_cash *  multiplier, 2)} {currency_name}'
