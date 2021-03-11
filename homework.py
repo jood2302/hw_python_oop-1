@@ -109,7 +109,7 @@ class CaloriesCalculator(Calculator):
         is_over: float = self.limit - self.get_today_stats()
         if is_over > 0:
             return f'Сегодня можно съесть что-нибудь ещё, '
-            f' но с общей калорийностью не более {is_over} кКал'
+                f' но с общей калорийностью не более {is_over} кКал'
         else:
             return f'Хватит есть!'
 
@@ -152,7 +152,7 @@ class CashCalculator(Calculator):
         elif now_cash < 0:
             now_cash *= -1
             return f'Денег нет, держись: твой долг - '
-            f' {round(now_cash *  multiplier, 2)} {currency_name}'
+                f'{round(now_cash *  multiplier, 2)} {currency_name}'
         else:
             return f'На сегодня осталось '
-            f'{round(now_cash *  multiplier, 2)} {currency_name}'
+                f'{round(now_cash *  multiplier, 2)} {currency_name}'
