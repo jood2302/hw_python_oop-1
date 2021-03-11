@@ -1,35 +1,32 @@
-# Project: Sprint 2. Calculator calories/money (four classes). 
+# Project: Sprint 2. Calculator calories/money (four classes).
 # Yandex.Praktikum.Python developer.
 # Author: Vasiliy Kovylin. Backend, Cohort 16, Student.
 
 # Description:
-# Need make four classes for two calculators: 
+# Need make four classes for two calculators:
 # Class Record
 # Class Calculator
 # Class CaloriesCalculator
 # Class CashCalculator
 
-# Methods for Record:                 
+# Methods for Record:
 # no methods, only data
 
-# Methods for Calculator:             
+# Methods for Calculator:
 # add_record()
 # get_today_stats()
 # get_week_stats()
 #
-# Methods for CaloriesCalculator:     
+# Methods for CaloriesCalculator:
 # get_calories_remained()
 #
-# Methods for CashCalculator:         
-# get_today_cash_remained(currency)    
-
-
+# Methods for CashCalculator:
+# get_today_cash_remained(currency)
 
 import datetime as dt
 from typing import List
 
 LOCAL_DATE_FORMAT: str = '%d.%m.%Y'
-
 
 def time_to_date(dt_time: dt.datetime) -> dt.date:
     """ convert datetime in date only
@@ -43,10 +40,10 @@ class Record:
 
     """
 
-    def __init__ (self, amount: float, comment: str, date: str = None) -> None: 
+    def __init__(self, amount: float, comment: str, date: str = None) -> None:
         """ Needs 3 named values: 'amount', 'comment' and 'date'
             In call of this, value 'date' may be skipped
-            In this case, in the value 'date' should be 
+            In this case, in the value 'date' should be
             written the value of current day.
 
         """
@@ -56,9 +53,7 @@ class Record:
         if date is None:
             self.date: dt.date = dt.date.today()
         else:
-            self.date: dt.date = 
-            time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
-
+            self.date: dt.date = time_to_date(dt.datetime.strptime(date, LOCAL_DATE_FORMAT))
 
 class Calculator:
     """ Parent class. Contains basic functionality, including list or records.
@@ -91,23 +86,21 @@ class Calculator:
     def get_week_stats(self) -> float:
         """ calculates sum of field 'amount' in self list 'records' for current date
             and six days ago
-        """
+        """        
         today: dt.date = dt.date.today()
         week_sum: float = 0
         for rec in self.records:
             if rec.date > today - dt.timedelta(days=7) and rec.date <= today:
                 week_sum += rec.amount
-        return week_sum        
+        return week_sum
 
 class CaloriesCalculator(Calculator):
     """ Child class of 'Calculator'. All of this included.
         Added new own method
-
     """
     def get_calories_remained(self) -> str:
         """ Calculates difference between today_stats and day_limit
             and print first or second message for user
-
         """
         is_over: float = self.limit - self.get_today_stats()
         if is_over > 0:
