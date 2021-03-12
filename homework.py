@@ -58,21 +58,19 @@ class Calculator:
         """calculates sum of field 'amount' in self list 'records' for current date
            and six days ago"""
         today: dt.date = dt.date.today()
-        week_sum: float = 0
-        # sum([int(i) for i in lst]))
-        for rec in self.records:
-            if rec.date > today - dt.timedelta(days=7) and rec.date <= today:
-                week_sum += rec.amount
-        return week_sum
+        delta_time: dt.date = dt.timedelta(days=1)
+        tmp_list: List = []
+        for x in range(7):
+            delta_time: dt.date = dt.timedelta(days=x)
+            tmp_list.append(self.get_day_stats(today - delta_time))            
+        return sum(v for v in tmp_list)
 
-    """def today_balance(self, date: dt.date) -> float:
-        return self.limit - self.get_today_stats(self)"""
+    def today_balance(self, date: dt.date) -> float:
+        return self.limit - self.get_today_stats()
 
     def get_day_stats(self, date: dt.date) -> float:
-        new_list: List = [x for x in self.records if date in x]
-        print(new_list)
-        print(sum([v[0] for v in new_list]))
-        return sum([v[0] for v in new_list])
+        tmp_list: List = [x.amount for x in self.records if x.date == date]
+        return sum(v for v in tmp_list)
 
 
 class CaloriesCalculator(Calculator):
@@ -96,16 +94,21 @@ class CashCalculator(Calculator):
 
     EURO_RATE: float = 87.94
     USD_RATE: float = 73.91
-    RUB_RATE: float = 1.0
-
-    currency_attrib: dict = {'rub': 'руб', 'eur': 'Euro', 'usd': 'USD'}
-    currency_rate: dict = {'rub': RUB_RATE, 'eur': EURO_RATE, 'usd': USD_RATE}
 
     def get_today_cash_remained(self, currency: str) -> str:
         """From call wait currency name, calculates balance and
            return message with the value in the recalculated form."""
-        date: dt.date = dt.date.today()
+        EURO_RATE: float = 87.94
+        USD_RATE: float = 73.91
+        RUB_RATE: float = 1.0
+
+        self.currency_attrib: dict = {'rub': 'руб', 'eur': 'Euro',
+                                      'usd': 'USD'}
+        self.currency_rate: dict = {'rub': RUB_RATE, 'eur': EURO_RATE,
+                                    'usd': USD_RATE}
+
         now_cash: float = self.get_today_stats()
+
         if now_cash == 0:
             return 'Денег нет, держись'
 
@@ -119,6 +122,7 @@ class CashCalculator(Calculator):
                     f'{now_cash_currency} {currency_name}')
         return ('На сегодня осталось '
                 f'{now_cash_currency} {currency_name}')
+                
 
 if __name__ == "__main__":
 
