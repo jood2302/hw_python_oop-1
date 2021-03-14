@@ -34,7 +34,7 @@ class Calculator:
        including list or records."""
 
     def __init__(self, limit: int) -> None:
-        """Value "limit" - day limit for proper functioning own methods."""
+        """Value "limit" - day limit."""
         self.limit: int = limit
         self.records: List[Record] = []
 
@@ -45,14 +45,10 @@ class Calculator:
         """calculates sum of field 'amount' in self list 'records'
         for current date.
         """
-        
-        #tmp_list: List = [x.amount for x in self.records if x.date == dt.date.today()]
-        return sum(v for v 
+
+        return sum(v for v
                    in [x.amount for x in self.records
-                   if x.date == dt.date.today()])
-        
-        
-        return self.get_day_stats(dt.date.today())
+                       if x.date == dt.date.today()])
 
     def get_week_stats(self) -> float:
         """calculates sum of field 'amount' in self list 'records' for
@@ -60,17 +56,14 @@ class Calculator:
         """
 
         today_date: dt.date = dt.date.today()
-        return sum(v for v in 
+        return sum(v for v in
                    [x.amount for x in self.records
-                   if (dt.timedelta(days=7)
-                      > (today_date - x.date)
-                      >= dt.timedelta(days=0))])
+                    if (dt.timedelta(days=7)
+                        > (today_date - x.date)
+                        >= dt.timedelta(days=0))])
 
     def get_today_balance(self) -> float:
         return self.limit - self.get_today_stats()
-
-    #def get_day_stats(self, date: dt.date) -> float:
-        
 
 
 class CaloriesCalculator(Calculator):
@@ -83,10 +76,10 @@ class CaloriesCalculator(Calculator):
         and print first or second message for user.
         """
 
-        overhead: float = self.get_today_balance()
-        if overhead > 0:
+        today_balance: float = self.get_today_balance()
+        if today_balance > 0:
             return ('Сегодня можно съесть что-нибудь ещё,'
-                    f' но с общей калорийностью не более {overhead} кКал')
+                    f' но с общей калорийностью не более {today_balance} кКал')
         return 'Хватит есть!'
 
 
