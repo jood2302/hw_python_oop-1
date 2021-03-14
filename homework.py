@@ -1,9 +1,14 @@
 """Project: Sprint 2. Calculator calories/money (four classes).
 
-Class Record
-Class Calculator
-Class CaloriesCalculator
-Class CashCalculator.
+Class Record - Object of 3 values: 'amount', 'comment' and 'date'.
+Class Calculator - get day limit at init stage and store it
+and list of records.
+Have methods - add_record(), get_today_stats(), get_week_stats()
+and get_today_balance().
+Class CaloriesCalculator - child class of Calculator.
+Have method - get_calories_remained()
+Class CashCalculator - child class of Calculator.
+Have method - get_today_cash_remained().
 """
 
 import datetime as dt
@@ -13,11 +18,10 @@ LOCAL_DATE_FORMAT: str = '%d.%m.%Y'
 
 
 class Record:
-    """Object of 3 values: 'amount', 'comment' and 'date'.'"""
 
     def __init__(self, amount: float, comment: str,
                  date: Optional[str] = None) -> None:
-        """if value 'date' skiiped, turn today."""
+        """If value 'date' skiped, set today."""
 
         self.amount: float = amount
         self.comment: str = comment
@@ -25,16 +29,13 @@ class Record:
         if date is None:
             self.date: dt.date = dt.date.today()
         else:
-            self.date: dt.date = (dt.datetime.date(dt.datetime.strptime(date,
+            self.date = (dt.datetime.date(dt.datetime.strptime(date,
                                   LOCAL_DATE_FORMAT)))
 
 
 class Calculator:
-    """Parent class. Contains basic functionality,
-       including list or records."""
 
     def __init__(self, limit: int) -> None:
-        """Value "limit" - day limit."""
         self.limit: int = limit
         self.records: List[Record] = []
 
@@ -42,39 +43,32 @@ class Calculator:
         self.records.append(record)
 
     def get_today_stats(self) -> float:
-        """calculates sum of field 'amount' in self list 'records'
-        for current date.
-        """
+        """Calculate sum of field 'amount' in self list 'records'
+        for current date. Return it."""
 
         return sum(v for v
                    in [x.amount for x in self.records
                        if x.date == dt.date.today()])
 
     def get_week_stats(self) -> float:
-        """calculates sum of field 'amount' in self list 'records' for
-        current date and six days ago.
-        """
+        """Calculate sum of field 'amount' in self list 'records'
+        for last week. Return it."""
 
         today_date: dt.date = dt.date.today()
+        week_ago_date: dt.date = today_date - dt.timedelta(days=7)
         return sum(v for v in
                    [x.amount for x in self.records
-                    if (dt.timedelta(days=7)
-                        > (today_date - x.date)
-                        >= dt.timedelta(days=0))])
+                    if week_ago_date < x.date <= today_date])
 
     def get_today_balance(self) -> float:
         return self.limit - self.get_today_stats()
 
 
 class CaloriesCalculator(Calculator):
-    """Child class of 'Calculator'. All of this included.
-    Added new own method get_calories_remained().
-    """
 
     def get_calories_remained(self) -> str:
-        """Calculates difference between today_stats and day_limit
-        and print first or second message for user.
-        """
+        """Calculate difference between today_stats and day_limit.
+        Return first or second message for user."""
 
         today_balance: float = self.get_today_balance()
         if today_balance > 0:
@@ -84,9 +78,6 @@ class CaloriesCalculator(Calculator):
 
 
 class CashCalculator(Calculator):
-    """Simple upgrade of class Calculator for specific
-    functionality.
-    """
 
     EURO_RATE: float = 87.94
     USD_RATE: float = 73.91
@@ -94,25 +85,24 @@ class CashCalculator(Calculator):
 
     def get_today_cash_remained(self, currency: str) -> str:
         """Get currency name, calculate today balance,
-        return message of result in carrency's dimensions.
-        """
+        return message of result in carrency's monetary units.
+        If currency name unknown, return err_message"""
 
-        self.currency_attrib: dict = {'rub': 'руб',
-                                      'eur': 'Euro',
-                                      'usd': 'USD'}
+        currency_attrib: dict = {'rub': ['руб', self.RUB_RATE],
+                                 'eur': ['Euro', self.EURO_RATE],
+                                 'usd': ['USD', self.USD_RATE]}
 
-        self.currency_rate: dict = {'rub': self.RUB_RATE,
-                                    'eur': self.EURO_RATE,
-                                    'usd': self.USD_RATE}
+        if not currency_attrib[currency]:
+            return 'Тип валюты не распознан, расчёт невозможен.'
 
         now_cash: float = self.get_today_balance()
 
         if now_cash == 0:
             return 'Денег нет, держись'
 
-        divider: float = self.currency_rate[currency]
+        divider: float = currency_attrib[currency][1]
+        currency_name: str = currency_attrib[currency][0]
         now_cash_currency: float = round(now_cash / divider, 2)
-        currency_name: str = self.currency_attrib[currency]
 
         if now_cash_currency < 0:
             now_cash_currency = abs(now_cash_currency)
