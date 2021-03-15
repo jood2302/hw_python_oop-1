@@ -82,9 +82,9 @@ class CashCalculator(Calculator):
     RUB_RATE: float = 1.0
 
     def get_today_cash_remained(self, currency: Optional[str] = None) -> str:
-        """Get currency name, calculate today balance,
+        """Get currency's name, calculate today balance,
         return message of result in carrency's monetary units.
-        If currency name unknown or skipped, set carrency name as 'rub'.
+        If currency's name unknown or skipped, set carrency's name as 'rub'.
         """
         currency_attrib: dict = {'rub': ['руб', self.RUB_RATE],
                                  'eur': ['Euro', self.EURO_RATE],
