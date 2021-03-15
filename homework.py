@@ -21,7 +21,7 @@ class Record:
 
     def __init__(self, amount: float, comment: str,
                  date: Optional[str] = None) -> None:
-        """If the 'date' value is omitted, set the value to 'today'."""
+        """If the 'date' value is omitted, set the value as today."""
         self.amount: float = amount
         self.comment: str = comment
         self.date: dt.date
