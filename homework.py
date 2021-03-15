@@ -21,12 +21,12 @@ class Record:
 
     def __init__(self, amount: float, comment: str,
                  date: Optional[str] = None) -> None:
-        """If the "date" value is omitted, set the value to "today"."""
+        """If the 'date' value is omitted, set the value to 'today'."""
         self.amount: float = amount
         self.comment: str = comment
-
+        self.date: dt.date
         if date is None:
-            self.date: dt.date = dt.date.today()
+            self.date = dt.date.today()
         else:
             self.date = dt.datetime.strptime(date, LOCAL_DATE_FORMAT).date()
 
@@ -42,14 +42,16 @@ class Calculator:
 
     def get_today_stats(self) -> float:
         """Calculate sum of field 'amount' in self list 'records'
-        for current date. Return it."""
+        for current date. Return it.
+        """
         return sum(v for v
                    in [x.amount for x in self.records
                        if x.date == dt.date.today()])
 
     def get_week_stats(self) -> float:
         """Calculate sum of field 'amount' in self list 'records'
-        for last week. Return it."""
+        for last week. Return it.
+        """
         today_date: dt.date = dt.date.today()
         week_ago_date: dt.date = today_date - dt.timedelta(days=7)
         return sum(v for v in
@@ -64,7 +66,8 @@ class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self) -> str:
         """Calculate difference between today_stats and day_limit.
-        Return first or second message for user."""
+        Return first or second message for user.
+        """
         today_balance: float = self.get_today_balance()
         if today_balance > 0:
             return ('Сегодня можно съесть что-нибудь ещё,'
@@ -81,7 +84,8 @@ class CashCalculator(Calculator):
     def get_today_cash_remained(self, currency: Optional[str] = None) -> str:
         """Get currency name, calculate today balance,
         return message of result in carrency's monetary units.
-        If currency name unknown or skipped, set carrency name is 'rub'"""
+        If currency name unknown or skipped, set carrency name as 'rub'.
+        """
         currency_attrib: dict = {'rub': ['руб', self.RUB_RATE],
                                  'eur': ['Euro', self.EURO_RATE],
                                  'usd': ['USD', self.USD_RATE]}
