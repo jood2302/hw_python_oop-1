@@ -44,9 +44,10 @@ class Calculator:
         """Calculate sum of field 'amount' in self list 'records'
         for current date. Return it.
         """
-        return sum(v for v
-                   in [x.amount for x in self.records
-                       if x.date == dt.date.today()])
+        today_date: dt.date = dt.date.today()
+        today_list: List = [x.amount for x in self.records
+                            if x.date == today_date]
+        return sum(v for v in today_list)
 
     def get_week_stats(self) -> float:
         """Calculate sum of field 'amount' in self list 'records'
@@ -54,9 +55,9 @@ class Calculator:
         """
         today_date: dt.date = dt.date.today()
         week_ago_date: dt.date = today_date - dt.timedelta(days=7)
-        return sum(v for v in
-                   [x.amount for x in self.records
-                    if week_ago_date < x.date <= today_date])
+        week_list: List = [x.amount for x in self.records
+                           if week_ago_date < x.date <= today_date]
+        return sum(v for v in week_list)
 
     def get_today_balance(self) -> float:
         return self.limit - self.get_today_stats()
@@ -86,17 +87,17 @@ class CashCalculator(Calculator):
         return message of result in carrency's monetary units.
         If currency's name unknown or skipped, set carrency's name as 'rub'.
         """
+        now_cash: float = self.get_today_balance()
+
+        if now_cash == 0:
+            return 'Денег нет, держись'
+
         currency_attrib: dict = {'rub': ['руб', self.RUB_RATE],
                                  'eur': ['Euro', self.EURO_RATE],
                                  'usd': ['USD', self.USD_RATE]}
 
         if currency_attrib.get(currency) is None:
             currency = 'rub'
-
-        now_cash: float = self.get_today_balance()
-
-        if now_cash == 0:
-            return 'Денег нет, держись'
 
         divider: float = currency_attrib[currency][1]
         currency_name: str = currency_attrib[currency][0]
