@@ -1,16 +1,4 @@
-"""Project: Sprint 2. Calculator calories/money (four classes).
-
-Class Record - Object with 3 values: 'amount', 'comment' and 'date'.
-Used in the class Calculator for storing data.
-Class Calculator - get day limit at init stage and store it
-and list of records.
-Have methods - add_record(), get_today_stats(), get_week_stats()
-and get_today_balance().
-Class CaloriesCalculator - child class of Calculator.
-Have method - get_calories_remained().
-Class CashCalculator - child class of Calculator.
-Have method - get_today_cash_remained().
-"""
+"""Project: Sprint 2. Calculator calories/money (four classes)."""
 import datetime as dt
 from typing import List, Optional
 
@@ -42,22 +30,20 @@ class Calculator:
 
     def get_today_stats(self) -> float:
         """Calculate sum of field 'amount' in self list 'records'
-        for current date. Return it.
-        """
+        for current date. Return it."""
         today_date: dt.date = dt.date.today()
         today_list: List = [x.amount for x in self.records
                             if x.date == today_date]
-        return sum(v for v in today_list)
+        return sum(today_list)
 
     def get_week_stats(self) -> float:
         """Calculate sum of field 'amount' in self list 'records'
-        for last week. Return it.
-        """
+        for last week. Return it."""
         today_date: dt.date = dt.date.today()
         week_ago_date: dt.date = today_date - dt.timedelta(days=7)
         week_list: List = [x.amount for x in self.records
                            if week_ago_date < x.date <= today_date]
-        return sum(v for v in week_list)
+        return sum(week_list)
 
     def get_today_balance(self) -> float:
         return self.limit - self.get_today_stats()
@@ -67,8 +53,7 @@ class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self) -> str:
         """Calculate difference between today_stats and day_limit.
-        Return first or second message for user.
-        """
+        Return first or second message for user."""
         today_balance: float = self.get_today_balance()
         if today_balance > 0:
             return ('Сегодня можно съесть что-нибудь ещё,'
@@ -85,24 +70,26 @@ class CashCalculator(Calculator):
     def get_today_cash_remained(self, currency: Optional[str] = None) -> str:
         """Get currency's name, calculate today balance,
         return message of result in carrency's monetary units.
-        If currency's name unknown or skipped, set carrency's name as 'rub'.
+        If currency's name unknown or skipped, return message of error.
         """
         now_cash: float = self.get_today_balance()
 
         if now_cash == 0:
             return 'Денег нет, держись'
+        
+        if currency is None or currency == '':
+            return 'Тип валюты не указан. Корректный расчёт невозможен.'
 
         currency_attrib: dict = {'rub': ['руб', self.RUB_RATE],
                                  'eur': ['Euro', self.EURO_RATE],
                                  'usd': ['USD', self.USD_RATE]}
 
-        if currency is None:
-            currency = 'rub'
-        elif currency_attrib.get(currency,'no_currency') == 'no_currency':
-            currency = 'rub'
+        cur_currency_attrib: Optional[List] = currency_attrib.get(currency)
+        if cur_currency_attrib is None:
+            return f'Тип валюты {currency} неизвестен. Корректный расчёт невозможен.'
 
-        divider: float = currency_attrib[currency][1]
-        currency_name: str = currency_attrib[currency][0]
+        divider: float = cur_currency_attrib[1]
+        currency_name: str = cur_currency_attrib[0]
         now_cash_currency: float = round(now_cash / divider, 2)
 
         if now_cash_currency < 0:
