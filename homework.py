@@ -76,7 +76,7 @@ class CashCalculator(Calculator):
 
         if now_cash == 0:
             return 'Денег нет, держись'
-        
+
         if currency is None or currency == '':
             return 'Тип валюты не указан. Корректный расчёт невозможен.'
 
@@ -86,7 +86,8 @@ class CashCalculator(Calculator):
 
         cur_currency_attrib: Optional[List] = currency_attrib.get(currency)
         if cur_currency_attrib is None:
-            return f'Тип валюты {currency} неизвестен. Корректный расчёт невозможен.'
+            return (f'Тип валюты {currency} неизвестен.'
+                    'Корректный расчёт невозможен.')
 
         divider: float = cur_currency_attrib[1]
         currency_name: str = cur_currency_attrib[0]
