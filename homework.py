@@ -96,7 +96,9 @@ class CashCalculator(Calculator):
                                  'eur': ['Euro', self.EURO_RATE],
                                  'usd': ['USD', self.USD_RATE]}
 
-        if currency_attrib.get(currency) is None:
+        if currency is None:
+            currency = 'rub'
+        elif currency_attrib.get(currency,'no_currency') == 'no_currency':
             currency = 'rub'
 
         divider: float = currency_attrib[currency][1]
