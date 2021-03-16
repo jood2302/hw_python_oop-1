@@ -9,6 +9,7 @@ class Record:
 
     def __init__(self, amount: float, comment: str,
                  date: Optional[str] = None) -> None:
+        """Save values in instance."""
         """If the 'date' value is omitted, set the value as today."""
         self.amount: float = amount
         self.comment: str = comment
@@ -29,16 +30,14 @@ class Calculator:
         self.records.append(record)
 
     def get_today_stats(self) -> float:
-        """Calculate sum of field 'amount' in self list 'records'
-        for current date. Return it."""
+        """Calculate sum 'amount' for current date. Return it."""
         today_date: dt.date = dt.date.today()
         today_list: List = [x.amount for x in self.records
                             if x.date == today_date]
         return sum(today_list)
 
     def get_week_stats(self) -> float:
-        """Calculate sum of field 'amount' in self list 'records'
-        for last week. Return it."""
+        """Calculate sum 'amount' for last week. Return it."""
         today_date: dt.date = dt.date.today()
         week_ago_date: dt.date = today_date - dt.timedelta(days=7)
         week_list: List = [x.amount for x in self.records
@@ -52,8 +51,7 @@ class Calculator:
 class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self) -> str:
-        """Calculate difference between today_stats and day_limit.
-        Return first or second message for user."""
+        """Calculate day balance. Return message."""
         today_balance: float = self.get_today_balance()
         if today_balance > 0:
             return ('Сегодня можно съесть что-нибудь ещё,'
@@ -68,10 +66,7 @@ class CashCalculator(Calculator):
     RUB_RATE: float = 1.0
 
     def get_today_cash_remained(self, currency: Optional[str] = None) -> str:
-        """Get currency's name, calculate today balance,
-        return message of result in carrency's monetary units.
-        If currency's name unknown or skipped, return message of error.
-        """
+        """Get currency. Calculate today balance. Return message."""
         now_cash: float = self.get_today_balance()
 
         if now_cash == 0:
