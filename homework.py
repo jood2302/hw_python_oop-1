@@ -71,30 +71,25 @@ class CashCalculator(Calculator):
         if now_cash == 0:
             return 'Денег нет, держись'
 
-        currency_attrib: Dict[Tuple, Tuple]
-        currency_attrib = {('rub',): ('руб', self.RUB_RATE),
-                           ('eur',): ('Euro', self.EURO_RATE),
-                           ('usd',): ('USD', self.USD_RATE)}
+        currency_attrib: Dict[str, Tuple]
+        currency_attrib = {'rub': ('руб', self.RUB_RATE),
+                           'eur': ('Euro', self.EURO_RATE),
+                           'usd': ('USD', self.USD_RATE)}
 
-        """currency_attrib: Tuple = ('rub': ['руб', self.RUB_RATE],
-                                 'eur': ['Euro', self.EURO_RATE],
-                                 'usd': ['USD', self.USD_RATE])"""
-
-        cur_currency_attrib: Optional[Tuple] = currency_attrib.get((currency,))
-        if cur_currency_attrib is None:
+        current_currency_attrib: Optional[Tuple] = currency_attrib.get(currency)
+        if current_currency_attrib is None:
             return (f'Тип валюты {currency} неизвестен. '
                     'Корректный расчёт невозможен.')
 
         currency_name: str
         divider: float
-        currency_name, divider = cur_currency_attrib
-        # = cur_currency_attrib[1]
+        currency_name, divider = current_currency_attrib
 
         now_cash_currency: float = round(now_cash / divider, 2)
 
         if now_cash_currency < 0:
-            today_debt: float = abs(now_cash_currency)
+            debt_today: float = abs(now_cash_currency)
             return ('Денег нет, держись: твой долг - '
-                    f'{today_debt} {currency_name}')
+                    f'{debt_today} {currency_name}')
         return ('На сегодня осталось '
                 f'{now_cash_currency} {currency_name}')
