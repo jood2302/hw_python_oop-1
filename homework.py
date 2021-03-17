@@ -1,6 +1,6 @@
 """Project: Sprint 2. Calculator calories/money (four classes)."""
 import datetime as dt
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 
 LOCAL_DATE_FORMAT: str = '%d.%m.%Y'
 
@@ -32,17 +32,17 @@ class Calculator:
     def get_today_stats(self) -> float:
         """Calculate sum 'amount' for current date. Return it."""
         day_today: dt.date = dt.date.today()
-        
+
         return sum(x.amount for x in self.records
                    if x.date == day_today)
 
     def get_week_stats(self) -> float:
         """Calculate sum 'amount' for last week. Return it."""
         day_today: dt.date = dt.date.today()
-        week_ago_date: dt.date = day_today - dt.timedelta(days=7)
-        
+        day_week_ago: dt.date = day_today - dt.timedelta(days=7)
+
         return sum(x.amount for x in self.records
-                   if week_ago_date < x.date <= today_date)
+                   if day_week_ago < x.date <= day_today)
 
     def get_today_balance(self) -> float:
         return self.limit - self.get_today_stats()
@@ -70,23 +70,26 @@ class CashCalculator(Calculator):
 
         if now_cash == 0:
             return 'Денег нет, держись'
-                
-        currency_attrib: dict = {'rub': ['руб', self.RUB_RATE],
-                                 'eur': ['Euro', self.EURO_RATE],
-                                 'usd': ['USD', self.USD_RATE]}
-        
+
+        currency_attrib: Dict[Tuple, Tuple]
+        currency_attrib = {('rub',): ('руб', self.RUB_RATE),
+                           ('eur',): ('Euro', self.EURO_RATE),
+                           ('usd',): ('USD', self.USD_RATE)}
+
         """currency_attrib: Tuple = ('rub': ['руб', self.RUB_RATE],
                                  'eur': ['Euro', self.EURO_RATE],
                                  'usd': ['USD', self.USD_RATE])"""
 
-
-        cur_currency_attrib: Optional[List] = currency_attrib.get(currency)
+        cur_currency_attrib: Optional[Tuple] = currency_attrib.get((currency,))
         if cur_currency_attrib is None:
-            return (f'Тип валюты {currency} неизвестен.'
+            return (f'Тип валюты {currency} неизвестен. '
                     'Корректный расчёт невозможен.')
 
-        divider: float = cur_currency_attrib[1]
-        currency_name: str = cur_currency_attrib[0]
+        currency_name: str
+        divider: float
+        currency_name, divider = cur_currency_attrib
+        # = cur_currency_attrib[1]
+
         now_cash_currency: float = round(now_cash / divider, 2)
 
         if now_cash_currency < 0:
