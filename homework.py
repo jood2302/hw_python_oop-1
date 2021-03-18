@@ -9,7 +9,6 @@ class Record:
 
     def __init__(self, amount: float, comment: str,
                  date: Optional[str] = None) -> None:
-        """Save values in instance."""
         self.amount: float = amount
         self.comment: str = comment
         self.date: dt.date
@@ -31,17 +30,17 @@ class Calculator:
 
     def get_today_stats(self) -> float:
         """Calculate sum 'amount' for today. Return it."""
-        day_today: dt.date = dt.date.today()
+        today: dt.date = dt.date.today()
         return sum(x.amount for x in self.records
-                   if x.date == day_today)
+                   if x.date == today)
 
     def get_week_stats(self) -> float:
         """Calculate sum 'amount' for last week. Return it."""
-        day_today: dt.date = dt.date.today()
-        day_week_ago: dt.date = day_today - dt.timedelta(days=7)
+        today: dt.date = dt.date.today()
+        week_ago: dt.date = day_today - dt.timedelta(days=7)
 
         return sum(x.amount for x in self.records
-                   if day_week_ago < x.date <= day_today)
+                   if week_ago < x.date <= today)
 
     def get_today_balance(self) -> float:
         return self.limit - self.get_today_stats()
@@ -71,27 +70,27 @@ class CashCalculator(Calculator):
         if today_cash == 0:
             return 'Денег нет, держись'
 
-        currency_attrib: Dict[str, Tuple]
+        currency_attrib: Dict[str, Tuple[str, float]]
         currency_attrib = {'rub': ('руб', self.RUB_RATE),
                            'eur': ('Euro', self.EURO_RATE),
                            'usd': ('USD', self.USD_RATE)}
 
-        current_currency_attrib: Optional[Tuple]
-        current_currency_attrib = currency_attrib.get(currency)
-
-        if current_currency_attrib is None:
+        if currency not in currency_attrib:
             return (f'Тип валюты {currency} неизвестен. '
                     'Корректный расчёт невозможен.')
-
+        
         currency_name: str
-        divider: float
-        currency_name, divider = current_currency_attrib
+        currency_rate: float
+        currency_name, currency_rate = currency_attrib[currency]
 
-        cash_in_currency: float = round(today_cash / divider, 2)
+        cash_in_currency: float = round(today_cash / currency_rate, 2)
 
         if cash_in_currency < 0:
             today_debt: float = abs(cash_in_currency)
             return ('Денег нет, держись: твой долг - '
                     f'{today_debt} {currency_name}')
+
         return ('На сегодня осталось '
                 f'{cash_in_currency} {currency_name}')
+
+        
