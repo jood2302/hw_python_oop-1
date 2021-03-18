@@ -56,7 +56,8 @@ class CaloriesCalculator(Calculator):
         today_balance: float = self.get_today_balance()
         if today_balance > 0:
             return ('Сегодня можно съесть что-нибудь ещё,'
-                    f' но с общей калорийностью не более {today_balance} кКал')
+                    ' но с общей калорийностью не более '
+                    f'{today_balance} кКал')
         return 'Хватит есть!'
 
 
