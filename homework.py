@@ -37,7 +37,7 @@ class Calculator:
     def get_week_stats(self) -> float:
         """Calculate sum 'amount' for last week. Return it."""
         today: dt.date = dt.date.today()
-        week_ago: dt.date = day_today - dt.timedelta(days=7)
+        week_ago: dt.date = today - dt.timedelta(days=7)
 
         return sum(x.amount for x in self.records
                    if week_ago < x.date <= today)
