@@ -93,7 +93,8 @@ class CashCalculator(Calculator):
 
         if cash_in_currency < 0:
             today_debt: float = abs(cash_in_currency)
+
             return ('Денег нет, держись: твой долг - '
-                    f'{today_debt} {currency_name}')
+                    f'{debt_today} {currency_name}')
         return ('На сегодня осталось '
                 f'{cash_in_currency} {currency_name}')
