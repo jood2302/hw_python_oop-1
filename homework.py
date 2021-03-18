@@ -10,10 +10,10 @@ class Record:
     def __init__(self, amount: float, comment: str,
                  date: Optional[str] = None) -> None:
         """Save values in instance."""
-        """If the 'date' value is omitted, set the value as today."""
         self.amount: float = amount
         self.comment: str = comment
         self.date: dt.date
+        # If the 'date' value is omitted, set the value as today.
         if date is None:
             self.date = dt.date.today()
         else:
@@ -67,9 +67,9 @@ class CashCalculator(Calculator):
 
     def get_today_cash_remained(self, currency: str) -> str:
         """Get currency. Calculate today balance. Return message."""
-        now_cash: float = self.get_today_balance()
+        today_cash: float = self.get_today_balance()
 
-        if now_cash == 0:
+        if today_cash == 0:
             return 'Денег нет, держись'
 
         currency_attrib: Dict[str, Tuple]
@@ -88,11 +88,11 @@ class CashCalculator(Calculator):
         divider: float
         currency_name, divider = current_currency_attrib
 
-        now_cash_currency: float = round(now_cash / divider, 2)
+        cash_in_currency: float = round(today_cash / divider, 2)
 
-        if now_cash_currency < 0:
-            debt_today: float = abs(now_cash_currency)
+        if cash_in_currency < 0:
+            today_debt: float = abs(cash_in_currency)
             return ('Денег нет, держись: твой долг - '
-                    f'{debt_today} {currency_name}')
+                    f'{today_debt} {currency_name}')
         return ('На сегодня осталось '
-                f'{now_cash_currency} {currency_name}')
+                f'{cash_in_currency} {currency_name}')
