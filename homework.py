@@ -29,12 +29,13 @@ class Calculator:
     def add_record(self, record: Record) -> None:
         self.records.append(record)
 
-    def get_today_stats(self) -> float:
-        """Calculate sum 'amount' for current date. Return it."""
-        day_today: dt.date = dt.date.today()
-
+    def get_day_stats(self, day: dt.date) -> float:
+        """Calculate sum 'amount' for date. Return it."""
         return sum(x.amount for x in self.records
-                   if x.date == day_today)
+                   if x.date == day)
+
+    def get_today_stats(self) -> float:
+        return self.get_day_stats(dt.date.today())
 
     def get_week_stats(self) -> float:
         """Calculate sum 'amount' for last week. Return it."""
@@ -76,7 +77,9 @@ class CashCalculator(Calculator):
                            'eur': ('Euro', self.EURO_RATE),
                            'usd': ('USD', self.USD_RATE)}
 
-        current_currency_attrib: Optional[Tuple] = currency_attrib.get(currency)
+        current_currency_attrib: Optional[Tuple]
+        current_currency_attrib = currency_attrib.get(currency)
+
         if current_currency_attrib is None:
             return (f'Тип валюты {currency} неизвестен. '
                     'Корректный расчёт невозможен.')
