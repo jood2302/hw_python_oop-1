@@ -75,6 +75,9 @@ class CashCalculator(Calculator):
                            'eur': ('Euro', self.EURO_RATE),
                            'usd': ('USD', self.USD_RATE)}
 
+        # two in one combine: 
+        # check wrong key to escape exception "Keyerror"
+        # and return warning message
         if currency not in currency_attrib:
             return (f'Тип валюты {currency} неизвестен. '
                     'Корректный расчёт невозможен.')
