@@ -75,13 +75,13 @@ class CashCalculator(Calculator):
                            'eur': ('Euro', self.EURO_RATE),
                            'usd': ('USD', self.USD_RATE)}
 
-        # two in one combine: 
+        # two in one combine:
         # check wrong key to escape exception "Keyerror"
         # and return warning message
         if currency not in currency_attrib:
             return (f'Тип валюты {currency} неизвестен. '
                     'Корректный расчёт невозможен.')
-        
+
         currency_name: str
         currency_rate: float
         currency_name, currency_rate = currency_attrib[currency]
@@ -95,5 +95,3 @@ class CashCalculator(Calculator):
 
         return ('На сегодня осталось '
                 f'{cash_in_currency} {currency_name}')
-
-        
