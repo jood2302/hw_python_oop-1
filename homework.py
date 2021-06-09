@@ -78,7 +78,7 @@ class CashCalculator(Calculator):
         if currency not in currency_attrib:
             return (f'Тип валюты {currency} неизвестен. '
                     'Корректный расчёт невозможен.')
-        
+
         currency_name: str
         currency_rate: float
         currency_name, currency_rate = currency_attrib[currency]
@@ -92,5 +92,3 @@ class CashCalculator(Calculator):
 
         return ('На сегодня осталось '
                 f'{cash_in_currency} {currency_name}')
-
-        
